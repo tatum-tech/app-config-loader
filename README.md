@@ -1,4 +1,4 @@
-# App-Config-Loader
+# App-Config-Loader [![Build Status](https://travis-ci.com/digifi-io/app-config-loader.svg?token=1owHdFhQpzdjTsye6Ykz&branch=master)](https://travis-ci.com/digifi-io/app-config-loader) [![Coverage Status](https://coveralls.io/repos/github/digifi-io/app-config-loader/badge.svg?branch=master&t=5DBAAg)](https://coveralls.io/github/digifi-io/app-config-loader?branch=master)
 Takes db config from either the command line or .env file and returns app configuration for the periodic app.
 * Command Line
 ```

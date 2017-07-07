@@ -2,14 +2,24 @@
 
 const path = require('path');
 const fs = require('fs-extra');
-const flatten = require('flat');
-const chai = require('chai');
+// const flatten = require('flat');
+// const chai = require('chai');
 const expect = require('chai').expect;
 const Config = require('../../lib');
 
 describe('Config.js', function() {
   this.timeout(10000);
-  describe('should take db configs from command line arguments', function() {
+  describe('should take db configs from command line arguments', function () {
+    it('should handle errors', done => {
+      Config({ any: 'prop' })
+        .then(result => {
+          done(result);
+        })
+        .catch(err => {
+          expect(err).to.be.an('error');
+          done();
+        });
+    });
     it('should return the settings for application config db', (done) => {
       const command_line_args =['/Users/sample_user/.nvm/versions/node/v0.0.0/bin/node',
         '/Users/sample_user/sample_app/index.js',
