@@ -1,0 +1,38 @@
+{
+  "name": "@digifi/app-config-loader",
+  "description": "Config.js file for DigiFi Periodic Applications",
+  "version": "0.0.1",
+  "main": "index.js",
+  "engines": {
+    "node": "^6.x"
+  },
+  "license": "",
+  "scripts": {
+    "start": "node index.js --e",
+    "test": "mocha -R spec --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digifi-io/app-config-loader.git"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "flat": "^2.0.1",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "sinon": "^2.3.6",
+    "sinon-chai": "^2.11.0",
+    "coveralls": "^2.13.1",
+    "grunt": "^1.0.1",
+    "grunt-coveralls": "^1.0.1",
+    "grunt-jsdoc": "^2.1.0",
+    "grunt-mocha-cov": "^0.4.0",
+    "grunt-mocha-istanbul": "^5.0.2",
+    "grunt-simple-mocha": "^0.4.1",
+    "istanbul": "^0.4.5",
+    "jsdoc": "^3.4.3",
+    "mocha": "^3.4.2"
+  }
+}
