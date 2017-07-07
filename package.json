@@ -1,7 +1,7 @@
 {
   "name": "@digifi/app-config-loader",
   "description": "Config.js file for DigiFi Periodic Applications",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "engines": {
     "node": "^6.x"
