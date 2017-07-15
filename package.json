@@ -3,14 +3,19 @@
   "description": "Config.js file for DigiFi Periodic Applications",
   "version": "0.0.3",
   "main": "index.js",
+  "private": true,
   "engines": {
     "node": "^6.x"
   },
-  "license": "",
+  "license": "UNLICENSED",
   "scripts": {
     "start": "node index.js --e",
     "test": "mocha -R spec --recursive"
   },
+  "bugs": {
+    "url": "https://github.com/digifi-io/app-config-loader/issues"
+  },
+  "author": "DigiFi",
   "repository": {
     "type": "git",
     "url": "https://github.com/digifi-io/app-config-loader.git"
@@ -23,8 +28,6 @@
   },
   "devDependencies": {
     "chai": "^4.0.2",
-    "sinon": "^2.3.6",
-    "sinon-chai": "^2.11.0",
     "coveralls": "^2.13.1",
     "grunt": "^1.0.1",
     "grunt-coveralls": "^1.0.1",
@@ -34,6 +37,9 @@
     "grunt-simple-mocha": "^0.4.1",
     "istanbul": "^0.4.5",
     "jsdoc": "^3.4.3",
-    "mocha": "^3.4.2"
+    "jsdoc-to-markdown": "^3.0.0",
+    "mocha": "^3.4.2",
+    "sinon": "^2.3.6",
+    "sinon-chai": "^2.11.0"
   }
 }

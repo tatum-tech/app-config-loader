@@ -66,10 +66,9 @@ module.exports = function (grunt) {
     },
     jsdoc: {
       dist: {
-        src: ['utility/**/*.js', 'index.js'],
+        src: ['lib/*.js', ],
         options: {
           destination: 'doc/html',
-          configure: 'jsdoc.json',
         },
       },
     },
