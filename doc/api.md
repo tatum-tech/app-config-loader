@@ -10,5 +10,4 @@ ult configuration settings.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| customProcess | <code>Object</code> \| <code>undefined</code> | user specified process with argumen
-ts or undefined for using command line arguments |
+| customProcess | <code>Object</code> \| <code>undefined</code> | user specified process with arguments or undefined for using command line arguments |
