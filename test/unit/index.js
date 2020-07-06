@@ -1,79 +1,57 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs-extra');
-// const flatten = require('flat');
-// const chai = require('chai');
 const expect = require('chai').expect;
-const Config = require('../../lib');
+const sinon = require('sinon');
 
-describe('Config.js', function() {
-  this.timeout(10000);
-  describe('should take db configs from command line arguments', function () {
-    it('should handle errors', done => {
-      Config({ any: 'prop' })
-        .then(result => {
-          done(result);
-        })
-        .catch(err => {
-          expect(err).to.be.an('error');
-          done();
-        });
-    });
-    it('should return the settings for application config db', (done) => {
-      const command_line_args =['/Users/sample_user/.nvm/versions/node/v0.0.0/bin/node',
-        '/Users/sample_user/sample_app/index.js',
-        '--e',
-        'development',
-        '--db_config.settings.name=Test App',
-        '--db_config.configuration.type=db',
-        '--db_config.configuration.db=lowkie',
-        '--db_config.configuration.options.dbpath=content/config/settings/config_db.json',
-      ];
-      Config({ argv: command_line_args, })
-        .then(dbsettings => {
-          expect(dbsettings.configuration.db).to.eql('lowkie');
-          expect(dbsettings.settings.name).to.eql('Test App');
-          done();
-        })
-        .catch(done);
-    });
-    it('should return the default settings of command line arguments does not exist', (done) => {
-      Config()
-        .then(dbsettings => {
-          expect(dbsettings.configuration.db).to.eql('mongoose');
-          expect(dbsettings.settings.name).to.eql('Sample App');
-          done();
-        })
-        .catch(done);
-    });
+const configLoaderConstructor = require('../../lib').constructor;
+const secretsService = require('../../lib/secretsService');
+
+describe('configLoader.js', function() {
+  it('should fallback to default if no .env file exist', async function() {
+    const configLoader = new configLoaderConstructor();
+    const config = await configLoader.appConfig();
+
+    expect(config.configuration.options.url).to.eql('mongodb://localhost:27017/config_db');
+    expect(config.settings.name).to.eql('Sample App');
+    expect(config.settings.application.environment).to.eql('production');
   });
 
+  it('should use azure key vault if its name exist in .env', async function() {
+    process.env.AzureKeyVaultName = 'SomeKeyVaultName';
 
-  describe('should use env file if command line argument was not passed in', function() {
-    before(function(done) {
-      fs.outputFile(path.join(__dirname, '.env'), 'DB_CONFIG={"settings": {"name": "Test App"}, "configuration":{"type": "db", "db":"sequelize", "options":{"database":"configdb"}}}', done);
-    });
+    sinon.stub(secretsService, 'init').returns(fieldName => fieldName);
 
-    it('should return db configs from .env file', (done) => {
-      let cli_config = [
-        '/Users/sample_user/.nvm/versions/node/v0.0.0/bin/node',
-        '/Users/sample_user/sample_app/index.js',
-        '--e',
-        'development',
-        `--envOptions.path=${path.join(__dirname, '.env')}`,
-      ];
-      Config({ argv:cli_config, })
-        .then(dbsettings => {
-          expect(dbsettings.configuration.db).to.eql('sequelize');
-          expect(dbsettings.settings.name).to.eql('Test App');
-          done();
-        })
-        .catch(done);
-    });
+    const configLoader = new configLoaderConstructor();
+    const config = await configLoader.appConfig();
 
-    after(function(done){
-      fs.unlink(path.join(__dirname, '.env'), done);
-    });
+    expect(config.configuration.options.url).to.eql('MongoUrl');
+    expect(config.configuration.options.mongoose_options.replset.rs_name).to.eql('MongoReplicasetName');
+    expect(config.settings.name).to.eql('ProjectName');
+    expect(config.settings.application.environment).to.eql('Environment');
+  });
+
+  it('should use env file if no azure key vault name provided', async function() {
+    process.env.ProjectName = 'Test App';
+    process.env.Environment = 'development';
+    process.env.MongoUrl = 'mongodb://mongoUrlExample.io:27017/config_db';
+    process.env.MongoReplicasetName = 'rsNameExample';
+
+    const configLoader = new configLoaderConstructor();
+    const config = await configLoader.appConfig();
+
+    expect(config.configuration.options.url).to.eql('mongodb://mongoUrlExample.io:27017/config_db');
+    expect(config.configuration.options.mongoose_options.replset.rs_name).to.eql('rsNameExample');
+    expect(config.settings.name).to.eql('Test App');
+    expect(config.settings.application.environment).to.eql('development');
+  });
+
+  afterEach(() => {
+    sinon.restore();
+
+    delete process.env.AzureKeyVaultName;
+    delete process.env.ProjectName;
+    delete process.env.Environment;
+    delete process.env.MongoUrl;
+    delete process.env.MongoReplicasetName;
   });
 });
